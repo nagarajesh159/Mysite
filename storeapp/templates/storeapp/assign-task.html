@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TASK ASSIGN</title>
+</head>
+<body>
+{% if old_task %}
+<h1>Assigned tasks</h1>
+{% for task in old_task %}
+{{task.title}}--
+<input type="text" value="{{task.status}}" name="title" readonly>
+{{task.delivery_person}}
+<br>
+{% endfor %}
+{% endif %}
+<h1>New Tasks</h1>
+{% for task in task_list %}
+{{task.title}}--
+<input type="text" value="{{task.status}}" name="title" readonly>
+- - - <a href="/api/task/{{task.id}}/assign/">Assign</a>
+<br>
+{% endfor %}
+</body>
+</html>

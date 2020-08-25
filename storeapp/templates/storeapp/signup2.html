@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+</head>
+<body>
+<form action="" method="post" enctype="multipart/form-data">
+   {% csrf_token %}
+    username:<input type="text" name="username"><br>
+    password:<input type="password" name="password"><br>
+    email:<input type="email" name="email"><br>
+  {% for field in form %}
+    {{ field.label_tag }} {{ field }}<br>
+  {% endfor %}
+    <input type="submit" value='create'>
+</form>
+</body>
+</html>

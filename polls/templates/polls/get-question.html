@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+<body>
+    <div>
+        {{question.id}}) {{question.question_text}}<br>
+        <div id="choice_div">
+            <ul>
+                <h2>List of choices for above question</h2>
+                {% for choice in question.choice_set.all %}
+                <li>
+                    <input type="radio" name="choice" id="choice-{{ choice.id }}" value="{{ choice.id }}">
+                    {{choice.choice_text}}
+                    <input type="number" value="{{choice.votes}}" readonly style="text-align:center;" id="vote-{{choice.id}}" >
+                </li>
+                <br>
+            {% endfor %}
+            </ul>
+            <button id="id_vote_add" data-vote-url="{% url 'add-vote' question.id %}">vote</button>
+
+        </div>
+    </div>
+    <div>
+        <div>
+            <h1>Add new choices</h1>
+        </div>
+        <form action="" method="post" id="choice_form" data-choice-create-url="{% url 'add-choice' question.id %}">
+            {% csrf_token %}
+            Choice-Text-->><input type="text" name="choice_text" id="id_choice_text">
+            votes-->><input type="text" name="votes" id="id_votes" readonly value="0">
+            <input type="submit" value="create-choice" id="create_choice_button">
+        </form>
+    </div>
+<script>
+    $(document).ready(function(){
+        alert('question and choices');
+        console.log('hello');
+        $(document).on('submit','#choice_form', function(e){
+            e.preventDefault();
+            var form = $(this).closest("form");
+            var choice_div = $(this).closest("#choice_div");
+            var result = {
+                choice_text: $('#id_choice_text').val(),
+                votes: $('#id_votes').val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            };
+            $.ajax({
+                type:'POST',
+                url:form.attr("data-choice-create-url"),
+                data: result,
+
+                success: function(responseTxt){
+                    var element1 = '<input type="radio" name="choice" id="choice-'+responseTxt+'" value='+responseTxt.id+'>'
+                    var element2 = responseTxt.choice_text+ '<input type="number" readonly style="text-align:center;" id="vote"  value='+ responseTxt.votes + '>'
+                    element = '<li>'+element1+element2+'</li><br>'
+                    $("ul").append(element);
+                    $( '#choice_form' ).each(function(){
+                        this.reset();
+                        });
+                    },
+                error: function(error){
+                    alert("error in adding the choice check whether the choice is present for the current question");
+                    },
+            });
+
+
+        });
+
+        $("#id_vote_add").click(function(){
+            var radioValue = $("input[name='choice']:checked").val();
+            var button = $(this).closest("button");
+            var url=button.attr("data-vote-url");
+            var dummy ="#vote-"+radioValue;
+            var voteChoice=$(dummy).val();
+            var result = {
+                radioValue : $("input[name='choice']:checked").val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+            };
+            $.ajax({
+                type:"POST",
+                url:url,
+                data:result,
+                success: function(responseTxt){
+                    $(dummy).val(responseTxt.votes)
+                },
+                error: function(){
+                    alert('failed')
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

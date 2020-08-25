@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Status change</title>
+</head>
+<body>
+{% for task in task_list %}
+{{task.title}}--{{task.status}}
+<a href="/api/change-task-status/{{task.id}}/">Change status</a><br><br>
+{% endfor %}
+</body>
+</html>

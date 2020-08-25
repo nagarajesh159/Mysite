@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN PAGE</title>
+</head>
+<body>
+
+<form action="." method="post" >
+    {% csrf_token %}
+    User Name : <input type="text" name="username"><br>
+    Password : <input type="text" name="password"><br>
+    <button type="submit">Login</button><br>
+</form>
+<a href = "{% url 'storeapp:signup' %}">Registration</a>
+</body>
+</html>

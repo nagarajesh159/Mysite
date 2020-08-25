@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
+</head>
+<body>
+<h1>Welcome to the HomePage</h1>
+<div>
+    <div id="question-form">
+        <form method="post" data-validate-username-url="{% url 'validate-question' %}">
+            {% csrf_token %}
+        {% for field in form %}
+        {{ field.label }}->>{{ field }}
+        {% endfor %}
+        <input type="submit" value="create a new question">
+        </form>
+    </div>
+    <p id="p1"></p>
+    <div id="questions">
+        <h2>Question list</h2>
+        {% for question in question_list %}
+        <li><a href="{% url 'get-question' question.id %}">{{ question.question_text }}</a></li><br>
+        {% endfor %}
+    </div>
+</div>
+
+<script >
+    $(document).ready(function(){
+        alert('welcome')
+        console.log('hello');
+        $("#id_question_text").change(function(){
+            console.log('step-1');
+            var form = $(this).closest("form");
+            console.log('step-2');
+            $.ajax({
+                url: form.attr("data-validate-username-url"),
+                data: form.serialize(),
+                dataType: 'json',
+                success: function(data){
+                    if (data.is_taken) {
+                        alert(data.error_message);
+                        $("p").show()
+                        document.getElementById("p1").innerHTML = data.error_message ;
+                        $("p").hide(1000)
+                        form[0].reset();
+                    }
+                }
+
+            });
+
+        });
+    });
+    </script>
+</body>
+</html>

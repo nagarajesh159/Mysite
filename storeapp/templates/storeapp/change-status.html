@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change task status</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+{{task}}-
+<select name="status">
+    <option value="accepted" selected>accepted</option>
+    <option value="completed">completed</option>
+    <option value="declined">declined</option>
+</select>
+    <button type="submit">Done</button><br>
+</form>
+</body>
+</html>
